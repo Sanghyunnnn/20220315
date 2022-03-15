@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Search</h1>
+
+    <form action="/result" method="post">
+        <input type="text" name="search" class="SearchBar">
+        <input type="submit">
+    </form>
+
+    <div class="Answer"></div>
+
+
+
+
+    <script>
+
+        var Search=document.forms[0].addEventListener('submit',function(event){
+            event.preventDefault();
+           var inputdata=document.forms[0].elements[0].value;
+           sendAjax('http://localhost:3000/result',inputdata);
+        });
+        function sendAjax(url,data)
+        {
+            var data={'result':data};
+            data=JSON.stringify(data); //문자열로 change
+
+            var xhr=new XMLHttpRequest();
+            xhr.open('POST',url);
+
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(data);
+  
+        xhr.addEventListener('load',function(){
+            var result=JSON.parse(xhr.responseText);
+           console.log(result)
+            document.querySelector(".Answer").innerText=result.result;
+        });
+    };
+    </script>
+    
+</body>
+</html>

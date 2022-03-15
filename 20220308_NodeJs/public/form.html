@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email</title>
+</head>
+<body>
+
+    <form action="email_post" method="post">
+
+
+        <input type="text" name="email"><br>
+        <input type="submit">
+
+        
+    </form>
+
+    <button class="ajaxsend">ajaxsend</button>
+
+    <div class="result"></div>
+        
+         
+
+    <script>document.querySelector('.ajaxsend').addEventListener('click',function()
+    {
+        var inputdata=document.forms[0].elements[0].value;
+        
+        sendAjax('http://localhost:3000/ajax_send_email',inputdata);
+    });
+    function sendAjax(url,data){
+
+        var data={'email':data};
+
+        data=JSON.stringify(data);  
+        //데이터를 보내줄려면 문자열로 보내 줘야 함
+
+        var xhr=new XMLHttpRequest(); //XMLHttpRequest : 서버로부터 데이터를 받아오기 위해 사용하는 객체! ( HTTP를 통해서 쉽게 데이터를 받을 수 있게 해주는 오브젝트 제공)
+        xhr.open('POST',url); //요청 초기화.. GET/POST 선택, 접속할 url 입력 (요청을 보낼 url입력)  
+
+        xhr.setRequestHeader('Content-Type',"application/json");//setRequestHeader()메소드를 사용하여 HTTP요청 헤더의 값을 설정 가능.. "application/json" : json타입으로 데이터 보냄 
+        xhr.send(data) //클라이언트-->서버로 data 보냄..( json형태로, POST방식으로.  )  <<해당 url로 비동기로 HTTP요청을 하게 된다..>>
+
+        xhr.addEventListener('load',function(){  //load이벤트를 등록하여 서버로부터 response가 올 때의 행동을 구현 할 수가 있다..
+            console.log(xhr);   
+
+            var result=JSON.parse(xhr.responseText); // xhr.responseText : 서버에 요청하여 응답으로 받은 데이터를 문자열로 저장한 것!!
+            document.querySelector(".result").innerHTML=result.email;
+            
+        });
+        //Ajax (Asynchronous Javascript and XML) : 비동기적( Asynchronous )으로 서버와 브라우저가 데이터를 주고 받는 방식을 의미함
+
+    }
+
+    
+    </script>
+</body>
+</html>
